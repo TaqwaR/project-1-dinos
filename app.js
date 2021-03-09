@@ -31,19 +31,17 @@ fetch('./dino.json')
 // Create Human Object
 let humanObject = {
   'name': 'string',
-  'feet': Number,
-  'inches': Number,
-  'weight': Number,
-  'diet': 'string'
-};
+  'feet': 'Number',
+  'inches': 'Number',
+  'weight': 'Number',
+  'diet': 'string',
+  'convertToInches': function() {
+    let toInches = this.feet * 12;
+    let convertedNumber = toInches + this.inches;
 
-// function Human(name, feet, inches, weight, diet) {
-//   this.name = name;
-//   this.feet = feet;
-//   this.inches = inches;
-//   this.weight = weight;
-//   this.diet = diet;
-// }
+    return convertedNumber
+  }
+};
 
 // Use IIFE to get human data from form
 const compareButton = document.getElementById('btn');
@@ -53,18 +51,16 @@ compareButton.addEventListener('click', () => {
 
   (function getFormData() {
     const humanData = Object.create(humanObject);
-    humanObject.name = 'Taqwa';
-    console.log(humanData.name);
+    humanData.name = document.querySelector('#name').value;
+    humanData.heightFeet = parseInt(document.querySelector('#feet').value);
+    humanData.heightInches = parseInt(document.querySelector('#inches').value);
+    humanData.weight = document.querySelector('#weight').value;
+    humanData.diet = document.querySelector('#diet').value;
+
+    console.log(humanData);
+    console.log(humanData.convertToInches());
 
     return humanData;
-
-    // humanData.name = document.querySelector('#name').value;
-    // humanData.heightFeet =  document.querySelector('#feet').value;
-    // humanData.heightInches =  document.querySelector('#inches').value;
-    // humanData.weight = document.querySelector('#weight').value;
-    // humanData.logAll = () => {
-    //   console.log('pumpkins');
-    // };
   }());
 });
 
