@@ -30,35 +30,78 @@ fetch('./dino.json')
 
 // Create Human Object
 let humanObject = {
-  'name': 'string',
-  'feet': 'Number',
-  'inches': 'Number',
-  'weight': 'Number',
-  'diet': 'string',
-  'convertToInches': function() {
-    let toInches = this.feet * 12;
-    let convertedNumber = toInches + this.inches;
+  'name': '',
+  'feet': '',
+  'inches': '',
+  'weight': '',
+  'diet': '',
+  'convertToInches': function(feetValue, inchesValue) {
+    let toInches = feetValue * 12;
+    let convertedNumber = toInches + inchesValue;
 
-    return convertedNumber
+    return convertedNumber;
   }
 };
 
-// Use IIFE to get human data from form
+// 
+
 const compareButton = document.getElementById('btn');
 
 compareButton.addEventListener('click', () => {
-  console.log('button clicked');
 
   (function getFormData() {
+    let creatures =[...dinoObjects];
+
     const humanData = Object.create(humanObject);
     humanData.name = document.querySelector('#name').value;
     humanData.heightFeet = parseInt(document.querySelector('#feet').value);
     humanData.heightInches = parseInt(document.querySelector('#inches').value);
+    humanData.totalHeightInches = humanData.convertToInches(humanData.heightFeet, humanData.heightInches);
     humanData.weight = document.querySelector('#weight').value;
     humanData.diet = document.querySelector('#diet').value;
 
-    console.log(humanData);
-    console.log(humanData.convertToInches());
+    creatures.push(humanData);
+
+    // Compare method one
+    dinoObjects.map(dino => {
+     let heightCompare =  dino.height > humanData.totalHeightInches ? `${dino.species} taller by: ${dino.height - humanData.totalHeightInches} inches` : `${humanData.name} taller by: ${humanData.totalHeightInches - dino.height} inches`;
+
+      console.log(heightCompare);
+
+     return heightCompare;
+    });
+
+    dinoObjects.forEach(dino => {
+      // Compare method two
+      let weightCompare = humanData.weight > dino.weight ? `You are heavier than a ${dino.species}!` : `A ${dino.species} is heavier than you!`;
+
+      // Compare method three
+      let dietCompare = humanData.diet !== dino.diet && humanData.diet.localeCompare(dino.diet, undefined, {sensitivity: 'accent'}) !== 0 ? `You have different diets! ${dino.species} is a ${dino.diet}, but you are a ${humanData.diet}.` : `You and ${dino.species} have the same diet!`;
+
+      let comparison = weightCompare + dietCompare;
+      // squareContent.innerHTML = comparison
+      return dino;
+    });
+
+    // Building grid
+    creatures.forEach(creature => {
+      let grid = document.querySelector('.js-grid');
+      let cell = document.createElement('div');
+
+      grid.insertBefore(cell, null);
+      let cells = Array.from(document.querySelectorAll('.js-grid div'));
+
+      cells.forEach(cell => {
+        if (!!creature.species) {
+          cell.setAttribute('class', 'dino-cell');
+        } else {
+          cell.setAttribute('class', 'human-cell');
+        }
+      });
+    });
+
+    console.log(`height in inches: ${humanData.totalHeightInches}`);
+    console.log(creatures);
 
     return humanData;
   }());
