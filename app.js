@@ -43,16 +43,27 @@ let humanObject = {
   }
 };
 
-// 
-
 const compareButton = document.getElementById('btn');
 
 compareButton.addEventListener('click', () => {
 
   (function getFormData() {
     let creatures =[...dinoObjects];
+    let grid = document.querySelector('.js-grid');
+    let cells = [];
 
     const humanData = Object.create(humanObject);
+
+    // Can I make this DRY-er? 
+    function humanDataSet(name, feet, inches, weight, diet) {
+      for (let i = 0; i < arguments.length; i++) {
+        // arguments[i] = document.querySelector('#'+`${arguments[i]}`).value;
+        console.log(arguments[i]);
+      }
+    }
+
+    humanDataSet(name, feet, inches, weight, diet);
+
     humanData.name = document.querySelector('#name').value;
     humanData.heightFeet = parseInt(document.querySelector('#feet').value);
     humanData.heightInches = parseInt(document.querySelector('#inches').value);
@@ -62,43 +73,50 @@ compareButton.addEventListener('click', () => {
 
     creatures.push(humanData);
 
-    // Compare method one
-    dinoObjects.map(dino => {
-     let heightCompare =  dino.height > humanData.totalHeightInches ? `${dino.species} taller by: ${dino.height - humanData.totalHeightInches} inches` : `${humanData.name} taller by: ${humanData.totalHeightInches - dino.height} inches`;
+    // Create Dino Compare Method 1
+    // Compare method one =====>
+    Dino.prototype.heightCompare = function() {
+      let heightCompare = this.height > humanData.totalHeightInches ? `${this.species} taller by: ${this.height - humanData.totalHeightInches} inches` : `${humanData.name} taller by: ${humanData.totalHeightInches - this.height} inches`;
 
-      console.log(heightCompare);
+      return heightCompare;
+    };
 
-     return heightCompare;
-    });
+    // Create Dino Compare Method 2
+    // Compare method two =====>
+    Dino.prototype.weightCompare = function() {
+      let weightCompare = humanData.weight > this.weight ? `You are heavier than a ${this.species}!` : `A ${this.species} is heavier than you!`;
 
-    dinoObjects.forEach(dino => {
-      // Compare method two
-      let weightCompare = humanData.weight > dino.weight ? `You are heavier than a ${dino.species}!` : `A ${dino.species} is heavier than you!`;
+      return weightCompare;
+    };
 
-      // Compare method three
-      let dietCompare = humanData.diet !== dino.diet && humanData.diet.localeCompare(dino.diet, undefined, {sensitivity: 'accent'}) !== 0 ? `You have different diets! ${dino.species} is a ${dino.diet}, but you are a ${humanData.diet}.` : `You and ${dino.species} have the same diet!`;
+    // Create Dino Compare Method 3
+    // Compare method three =====>
+    Dino.prototype.dietCompare = function() {
+      let dietCompare = humanData.diet !== this.diet && humanData.diet.localeCompare(this.diet, undefined, {sensitivity: 'accent'}) !== 0 ? `You have different diets! ${this.species} is a ${this.diet}, but you are a ${humanData.diet}.` : `You and ${this.species} have the same diet!`;
 
-      let comparison = weightCompare + dietCompare;
-      // squareContent.innerHTML = comparison
-      return dino;
-    });
+      return dietCompare;
+    };
 
-    // Building grid
-    creatures.forEach(creature => {
-      let grid = document.querySelector('.js-grid');
+    // Generate Tiles for each Dino in Array
+      // Add tiles to DOM
+    // Building grid =====>
+    creatures.forEach( creature => {
       let cell = document.createElement('div');
-
+      !!creature.species ? cell.setAttribute('class', 'dino-cell') : cell.setAttribute('class', 'human-cell');
+      cells.push(cell);
       grid.insertBefore(cell, null);
-      let cells = Array.from(document.querySelectorAll('.js-grid div'));
 
-      cells.forEach(cell => {
-        if (!!creature.species) {
-          cell.setAttribute('class', 'dino-cell');
-        } else {
-          cell.setAttribute('class', 'human-cell');
-        }
-      });
+      // !!creature.species ? append dino data to div : append humanData to div
+
+      if (!!creature.dietCompare) {
+        console.log(creature.dietCompare());
+      } else {
+        console.log('no dietCompare avail');
+      }
     });
+
+    // // Move human cell to center/array position 4
+    // cells.splice(4, 0, cells[8]);
 
     console.log(`height in inches: ${humanData.totalHeightInches}`);
     console.log(creatures);
@@ -106,19 +124,6 @@ compareButton.addEventListener('click', () => {
     return humanData;
   }());
 });
-
-// Create Dino Compare Method 1
-// NOTE: Weight in JSON file is in lbs, height in inches.
-
-// Create Dino Compare Method 2
-// NOTE: Weight in JSON file is in lbs, height in inches.
-
-// Create Dino Compare Method 3
-// NOTE: Weight in JSON file is in lbs, height in inches.
-
-// Generate Tiles for each Dino in Array
-
-  // Add tiles to DOM
 
 // Remove form from screen
 
