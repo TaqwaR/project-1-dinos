@@ -91,6 +91,9 @@ p {
     #grid div {
         width: calc(100% / 3);
         min-height: 200px;
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center;
     }
 }
 
