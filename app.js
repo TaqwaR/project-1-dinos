@@ -79,7 +79,7 @@ compareButton.addEventListener('click', () => {
     // Create Dino Compare Method 1
     // Compare method one =====>
     Dino.prototype.heightCompare = function() {
-      let heightCompare = this.height > humanData.totalHeightInches ? `<p>${this.species} taller by: ${this.height - humanData.totalHeightInches} inches</p>` : `${humanData.name}  taller than a ${this.species} by: ${humanData.totalHeightInches - this.height} inches`;
+      let heightCompare = this.height > humanData.totalHeightInches ? `${this.species} taller by: ${this.height - humanData.totalHeightInches} inches` : `${humanData.name}  taller than a ${this.species} by: ${humanData.totalHeightInches - this.height} inches`;
 
       return heightCompare;
     };
