@@ -90,6 +90,7 @@ p {
 @media (min-width: 550px) {
     #grid div {
         width: calc(100% / 3);
+        min-height: 200px;
     }
 }
 
